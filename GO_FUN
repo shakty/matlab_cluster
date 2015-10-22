@@ -1,1 +1,1 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/my_simulation')"
+bsub -J mysim -N matlab -nodisplay -singleCompThread -r "main_fun('conf/my_simulation')"
