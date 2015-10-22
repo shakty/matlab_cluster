@@ -9,15 +9,15 @@ SIMS4TASK = 4;
 TASKS4JOB = 20;
 
 % Setup job scheduler.
-logFolder = ['log/' params.simName];
+logFolder = 'log/';
 mkdir(logFolder); % The name is unique under the dump directory.
-dumpFolder = [ params.dumpDir params.simName];
+dumpFolder = params.dumpFolder;
 
 sched = findResource('scheduler','type','lsf');
 % emails = 'youremail@ethz.ch';
 % submitArgs = ['-o ' logFolder '/' simName '.log -u ' emails];
 % submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
-submitArgs = [' -R "rusage[mem=1000]" -o ' logFolder '/' params.simName '.log'];
+submitArgs = [' -R "rusage[mem=1000]" -o ' logFolder '/log.log'];
 set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);
 
