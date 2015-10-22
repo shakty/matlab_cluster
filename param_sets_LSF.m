@@ -53,7 +53,7 @@ for i1=1:length(params.p1)
         p2 = params.p2(i2);   
    
     for i3=1:length(params.p3)
-        p3 = params.p2(i3);   
+        p3 = params.p3(i3);   
    
         
     for rCount=1:params.nRuns
