@@ -122,26 +122,6 @@ for i1=1:length(params.p1)
            paramObjs{taskIdx} = paramsObj;
         end
 
-%        if (taskIdx ~= 0)
-%            paramObjs{taskIdx} = paramsObj;
-%        else
-%            paramObjs{taskIdx+1} = paramsObj;
-%            createTask(j, @wrappersim, 0, paramObjs);
-%            paramObjs = cell(SIMS4TASK, 1);
-%        end
-%
-%        % Submit the job to the scheduler in batches
-%        if (mod(simCount, TASKS4JOB) == 0)
-%				    wrappersim(paramObjs);
-%            % submit(j);
-%
-%            if (simCount ~= nCombinations)
-%                j = createJob(sched); 
-%                jobCount = jobCount + 1;
-%            end
-%
-%        end
-
         % Updating the simulations counter.
         simCount = simCount + 1;
         fprintf('\n\n');
@@ -163,7 +143,3 @@ end
 
 
 end
-
-
-
-     
