@@ -1,1 +1,1 @@
-bsub -J aggregate -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun('dump')"
+bsub -J aggregate -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun('/cluster/work/scr4/YOUR_NAME/')"

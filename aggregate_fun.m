@@ -10,15 +10,14 @@ function [] = aggregate_fun(DUMPDIR)
         
         % Dir name.
         file = files(r);
+				file = file.name;
         
         % Skip some directories.
         if ( strcmpi(file, '.') || strcmpi(file, '..'))
             continue;
         end
-           
-        subDir = [DUMPDIR file];
         
-        load([ subDir '/' 'sums' ]);
+        load([ DUMPDIR '/' file ]);
 
         % You should do the aggregation in the way 
         % that fits best your needs.
@@ -30,7 +29,7 @@ function [] = aggregate_fun(DUMPDIR)
        
     end
     
-    save('results', results)
+    save('./results', 'results')
 end
 
 

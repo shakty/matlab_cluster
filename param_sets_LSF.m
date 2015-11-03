@@ -28,10 +28,13 @@ j = createJob(sched);
 paramObjs = cell(SIMS4TASK, 1);            
 
 % Counters.
+combCount = 1;
 simCount = 1;
+taskCount = 1;
 jobCount = 1;
-nCombinations = params.nRuns*size(params.p1, 2)*size(params.p2, 2)* ...
+nCombinations = size(params.p1, 2)*size(params.p2, 2)* ...
                 size(params.p3,2);
+nSimulations = nCombinations * params.nRuns;
 
 % Seed type.
 seed_fixed = 0;
@@ -71,7 +74,7 @@ for i1=1:length(params.p1)
         % Notice how fprints is powerful to format text and numbers.
         fprintf('\n%s\n',params.simName);
         fprintf('Starting Run: %d/%d of Simulation n. %d/%d:\n', ...
-                 rCount,params.nRuns,simCount,nCombinations)
+                 rCount,params.nRuns,combCount,nCombinations)
         fprintf('------------------------------------\n');
 
         fprintf('P1,P2,P3: %f,%f,%f:\n', p1, p2, p3)
@@ -87,35 +90,64 @@ for i1=1:length(params.p1)
             'seed', seed ...
         );
 
+				% Here to debug.
+				% simulation(paramsObj);
+
         % It is convenient to group together more simulations in one
         % task if simulations are short. Matlab overhead to start on
         % each cluster node is about 1 minute.
         taskIdx = mod(simCount, SIMS4TASK);
 
-        if (taskIdx ~= 0)
-            paramObjs{taskIdx} = paramsObj;
+
+       if (taskIdx == 0)
+           paramObjs{SIMS4TASK} = paramsObj;
+           createTask(j, @wrappersim, 0, {{paramObjs}});
+ 
+           % Submit the job to the scheduler in batches
+           if (mod(taskCount, TASKS4JOB) == 0)
+               submit(j);
+ 
+               if (simCount ~= nSimulations)
+                   j = createJob(sched);
+                   jobCount = jobCount + 1;
+               end
+ 
+           end
+ 
+           % Update task count after checking to submit job
+           paramObjs = cell(SIMS4TASK, 1);
+           taskCount = taskCount + 1;
+ 
         else
-            paramObjs{taskIdx+1} = paramsObj;
-            createTask(j, @wrappersim, 0, paramObjs);
-            paramObjs = cell(SIMS4TASK, 1);
+           paramObjs{taskIdx} = paramsObj;
         end
 
-        % Submit the job to the scheduler in batches
-        if (mod(simCount, TASKS4JOB) == 0)
-            submit(j);
+%        if (taskIdx ~= 0)
+%            paramObjs{taskIdx} = paramsObj;
+%        else
+%            paramObjs{taskIdx+1} = paramsObj;
+%            createTask(j, @wrappersim, 0, paramObjs);
+%            paramObjs = cell(SIMS4TASK, 1);
+%        end
+%
+%        % Submit the job to the scheduler in batches
+%        if (mod(simCount, TASKS4JOB) == 0)
+%				    wrappersim(paramObjs);
+%            % submit(j);
+%
+%            if (simCount ~= nCombinations)
+%                j = createJob(sched); 
+%                jobCount = jobCount + 1;
+%            end
+%
+%        end
 
-            if (simCount ~= nCombinations)
-                j = createJob(sched); 
-                jobCount = jobCount + 1;
-            end
-
-        end
-
+        % Updating the simulations counter.
+        simCount = simCount + 1;
         fprintf('\n\n');
     end
     
-    % Updating the simulations counter.
-    simCount = simCount + 1;
+        combCount = combCount + 1;
     
     end
     end

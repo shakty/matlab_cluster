@@ -3,7 +3,7 @@ clc
 clear
 
 simName = 'my_simulation';
-dumpFolder = '/cluster/work/scr4/balistef/';
+dumpFolder = '/cluster/work/scr4/YOUR_OWN_NAME/';
 nRuns = 2;
 
 p1 = [0.1:0.1:1];
@@ -11,7 +11,7 @@ p2 = [-1,1];
 p3 = [1:5];
 
 seed = 0;
-seedtype = 0; % 0 = fixed, 1 = random;
+seedtype = 1; % 0 = fixed, 1 = random;
 
 conf = struct( ...
     'simName', simName, ...
